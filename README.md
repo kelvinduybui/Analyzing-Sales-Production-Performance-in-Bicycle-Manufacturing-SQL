@@ -52,10 +52,10 @@ This project leverages **SQL** on **Google BigQuery** to empower the sales and i
 ### ❶ **Business Need:**  
 The sales team needs to understand product performance over the last 12 months to identify top-performing subcategories for better resource allocation.  
 
-**Business Question**  
+### **Business Question**  
 Calculate the total **Quantity of items**, **Sales value**, and **Order quantity** for each Subcategory in the last 12 months (L12M).  
 
-**SQL Query**  
+### **SQL Query**  
 ```sql
 select format_datetime('%b %Y', a.ModifiedDate) month
       ,c.Name
@@ -74,7 +74,7 @@ group by 1,2
 order by 2,1;
 ```
 
-**Result:**  
+### **Result:**  
 | period    | Name               | qty_item | total_sales   | order_cnt |
 |-----------|--------------------|---------:|--------------:|----------:|
 | Sep 2013  | Bike Racks          |      312 | 22828.5120    |        71 |
@@ -88,15 +88,15 @@ order by 2,1;
 | Sep 2013  | Cranksets           |       75 | 13955.8500    |        20 |
 | ...       | ...                 |      ... | ...           |       ... |
 
-**Key Takeaway:**  
+### **Key Takeaway:**  
 
 ### ❷ **Business Need:**  
 Management wants to evaluate year-over-year growth to identify the fastest-growing product subcategories.  
 
-**Business Question**  
+### **Business Question**  
 Calculate the **YoY growth rate** for each **SubCategory** and list the **top 3** with the **highest growth** using **quantity_item**. Round to 2 decimals.
 
-**SQL Query**  
+### **SQL Query**  
 ```sql
 with 
 sale_info as (
@@ -139,10 +139,10 @@ order by dk ;
 ### ❸ **Business Need:**  
 The company wants to identify top-performing territories for strategic sales planning.  
 
-**Business Question**  
+### **Business Question**  
 Rank the top 3 TerritoryIDs with the highest Order Quantity each year. Ties should not skip rank numbers.  
 
-**SQL Query**  
+### **SQL Query**  
 ```sql
 with raw_data as
 (select extract (year from a.ModifiedDate) yr,
@@ -168,7 +168,7 @@ where rk <=3
 order by yr desc, rk asc;
 ```
 
- **Results:**  
+### **Results:**  
 | yr   | TerritoryID | order_cnt | rk |
 |------|-------------|-----------|----|
 | 2014 | 4           | 11632     | 1  |
@@ -184,15 +184,15 @@ order by yr desc, rk asc;
 | 2011 | 6           | 2705      | 2  |
 | 2011 | 1           | 1964      | 3  |
 
-**Key Takeaway:**  
+### **Key Takeaway:**  
 
 ### ❹ **Business Need:**  
 Marketing wants to track seasonal discount costs across subcategories to evaluate promotional impact.  
 
-**Business Question:**  
+### **Business Question:**  
 Calculate total seasonal discount cost for each subcategory.  
 
-**SQL Query**  
+### **SQL Query**  
 ```sql
 WITH sales_data AS (
     SELECT DISTINCT
@@ -219,21 +219,21 @@ GROUP BY 1, 2
 ORDER BY 1, 2;
 ```
 
-**Results:** 
+### **Results:** 
 | yearr | Name | total_cost |
 | --- | --- | --- |
 | 2012 | Helmets | 149.71669 |
 | 2013 | Helmets | 543.21975 |
 
-**Key Takeaway:**  
+### **Key Takeaway:**  
 
 ### ❽ **Business Need:**  
 Operations team needs to identify bottlenecks in order processing.  
 
-**Business Question:**  
+### **Business Question:**  
 Calculate the number and value of orders with status = 'Pending' in 2014.  
 
-**SQL Query**  
+### **SQL Query**  
 ```sql
 SELECT extract (year from OrderDate) yr,
 status,
@@ -245,9 +245,9 @@ and extract (year from OrderDate) = 2014
 group by 1,2;
 ```
 
-**Results:**
+### **Results:**
 | year | Status | order | value |
 | --- | --- | --- | --- |
 | 2014 | 1 | 224 | 3873579.012300... |
 
-**Key Takeaway:**  
+### **Key Takeaway:**  
