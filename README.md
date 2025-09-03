@@ -38,6 +38,9 @@ This project leverages **SQL** on **Google BigQuery** to empower the sales and i
 - Optimize sales, inventory, and marketing operations  
 - Support strategic decision-making based on data
 
+🛠️ **Tools Used**  
+- **Google BigQuery (SQL):** For data storage, querying, and performing all analytical calculations.
+
 ---
 
 ##  Dataset Description & Data Structure (DD & DS)
@@ -47,12 +50,23 @@ This project leverages **SQL** on **Google BigQuery** to empower the sales and i
 - **Format:** `.sql` (Queried directly in BigQuery)
 - **Time range:** 2011 - 2014
 
+### 🏷️ Data Structure
+**Key Tables Used:**
+- `Sales.SalesOrderDetail`
+- `Production.Product`
+- `Production.ProductSubcategory`
+- `Sales.SalesTerritory`
+- `Sales.SalesOrderHeader`
+- `Person.Person`
+- `Person.Address`
+- `Production.ProductInventory`
+
 ---
 ## ⚒️ Primary Process  
 ### ❶ **Business Need:**  
 The sales team needs to understand product performance over the last 12 months to identify top-performing subcategories for better resource allocation.  
 
-### **Business Question**  
+### **Business Question:**  
 Calculate the total **Quantity of items**, **Sales value**, and **Order quantity** for each Subcategory in the last 12 months (L12M).  
 
 ### **SQL Query**  
@@ -95,7 +109,7 @@ order by 2,1;
 ### ❷ **Business Need:**  
 Management wants to evaluate year-over-year growth to identify the fastest-growing product subcategories.  
 
-### **Business Question**  
+### **Business Question:**  
 Calculate the **YoY growth rate** for each **SubCategory** and list the **top 3** with the **highest growth** using **quantity_item**. Round to 2 decimals.
 
 ### **SQL Query**  
@@ -141,7 +155,7 @@ order by dk ;
 ### ❸ **Business Need:**  
 The company wants to identify top-performing territories for strategic sales planning.  
 
-### **Business Question**  
+### **Business Question:**  
 Rank the top 3 TerritoryIDs with the highest Order Quantity each year. Ties should not skip rank numbers.  
 
 ### **SQL Query**  
@@ -433,3 +447,6 @@ group by 1,2;
 ### **Key Takeaway:**  
 
 ## 4️⃣ Insights & Recommendations
+After querying things, here are some recommendations for **Sales and Inventory** team:
+- 
+- 
