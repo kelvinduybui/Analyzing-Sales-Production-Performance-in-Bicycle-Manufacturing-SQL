@@ -447,6 +447,10 @@ group by 1,2;
 ### **Key Takeaway:**  
 
 ## 4️⃣ Insights & Recommendations  
-After querying things, here are some recommendations for **Sales and Inventory** team:
-- 
-- 
+### Insights
+- fff
+- mmm
+
+### Recommendations
+- xx
+- xxx 
