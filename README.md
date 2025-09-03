@@ -69,24 +69,26 @@ left join `adventureworks2019.Production.ProductSubcategory` c
   on b.ProductSubcategoryID = cast(c.ProductSubcategoryID as string)
 
 where date(a.ModifiedDate) >=  (select date_sub(date(max(a.ModifiedDate)), INTERVAL 12 month)
-from `adventureworks2019.Sales.SalesOrderDetail` )--2013-06-30
+from `adventureworks2019.Sales.SalesOrderDetail` )
 group by 1,2
 order by 2,1;
 ```
 
 ### **Result:**  
-| period    | Name               | qty_item | total_sales   | order_cnt |
-|-----------|--------------------|---------:|--------------:|----------:|
-| Sep 2013  | Bike Racks          |      312 | 22828.5120    |        71 |
-| Sep 2013  | Bike Stands         |       26 | 4134.0000     |        26 |
-| Sep 2013  | Bottles and Cages   |      803 | 4676.5628     |       380 |
-| Sep 2013  | Bottom Brackets     |       60 | 3118.1400     |        19 |
-| Sep 2013  | Brakes              |      100 | 6390.0000     |        29 |
-| Sep 2013  | Caps                |      440 | 2879.4826     |       203 |
-| Sep 2013  | Chains              |       62 | 752.9280      |        24 |
-| Sep 2013  | Cleaners            |      296 | 1611.8300     |       108 |
-| Sep 2013  | Cranksets           |       75 | 13955.8500    |        20 |
-| ...       | ...                 |      ... | ...           |       ... |
+| month | Name       | qty_item | total_sales         | order_cnt |
+|-------|------------|---------:|--------------------:|----------:|
+| Apr 2013 | Bib-Shorts | 280      | 14833.123692        | 34        |
+| Apr 2014 | Bib-Shorts | 4        | 233.974             | 1         |
+| Aug 2012 | Bib-Shorts | 198      | 10659.531476        | 22        |
+| Dec 2012 | Bib-Shorts | 157      | 8477.058000         | 29        |
+| Feb 2013 | Bib-Shorts | 211      | 11361.453476        | 29        |
+| Feb 2014 | Bib-Shorts | 4        | 233.974             | 2         |
+| Jan 2013 | Bib-Shorts | 121      | 6533.274000         | 21        |
+| Jul 2012 | Bib-Shorts | 436      | 23143.997159        | 44        |
+| Jul 2013 | Bib-Shorts | 2        | 116.987             | 1         |
+| Jun 2012 | Bib-Shorts | 490      | 26180.538728        | 60        |
+| ...      | ...        | ...      | ...                 | ...       |
+
 
 ### **Key Takeaway:**  
 
@@ -220,12 +222,190 @@ ORDER BY 1, 2;
 ```
 
 ### **Results:** 
-| yearr | Name | total_cost |
+| year | Name | total_cost |
 | --- | --- | --- |
 | 2012 | Helmets | 149.71669 |
 | 2013 | Helmets | 543.21975 |
 
 ### **Key Takeaway:**  
+
+### ❺ **Business Need:**  
+The company wants to understand customer loyalty after successful shipments in 2014.  
+
+### **Business Question:**  
+Calculate the retention rate for customers in 2014 using cohort analysis with status = 'Successfully Shipped'.  
+
+### **SQL Query**  
+```sql
+with cus_info as
+(select extract (month from ModifiedDate) mth,
+extract (year from ModifiedDate) yr,
+CustomerID
+from `adventureworks2019.Sales.SalesOrderHeader`
+where status = 5
+and extract (year from ModifiedDate) = 2014)
+,
+
+add_row_num as
+(select *,
+row_number() over(
+  partition by customerid
+  order by mth
+) row_num
+from cus_info),
+
+first_order as
+(select *
+from add_row_num
+where row_num = 1),
+
+add_month_diff as
+(select ci.mth month_num, 
+ci.yr,
+CustomerID,
+fo.mth month_join,
+concat('M - ', ci.mth-fo.mth) month_diff
+from cus_info ci
+left join first_order fo
+using(CustomerID))
+
+select month_join,
+month_diff,
+count(distinct CustomerID) customer_cnt
+from add_month_diff
+group by 1,2
+order by 1,2;
+```
+
+### **Result:**  
+| month_join | month_diff | customer_cnt |
+|------------|------------|--------------|
+| 1          | M - 0       | 2076         |
+| 1          | M - 1       | 78           |
+| 1          | M - 2       | 89           |
+| 1          | M - 3       | 252          |
+| 1          | M - 4       | 96           |
+| 1          | M - 5       | 61           |
+| 1          | M - 6       | 18           |
+| 2          | M - 0       | 1805         |
+| 2          | M - 1       | 51           |
+| ...        | ...         | ...          |
+
+### **Key Takeaway:**  
+
+### ❻ **Business Need:**  
+Inventory planners need to monitor stock trends and monthly changes to prevent stockouts/overstock.  
+
+### **Business Question:**  
+Analyze the trend of stock levels and month-over-month % changes for all products in 2011. If growth rate is null, set to 0.  
+
+### **SQL Query**  
+```sql
+with raw_data as
+(select Name,
+extract (month from EndDate) mth,
+extract (year from EndDate) yr,
+sum(stockedQty) stock_qty
+from `adventureworks2019.Production.Product`
+left join `adventureworks2019.Production.WorkOrder`
+using(ProductID)
+where extract (year from EndDate) = 2011
+group by 1,2,3
+order by 1,2 desc,3),
+
+add_lag as
+(select *, 
+lag(stock_qty) over(
+  partition by Name
+  order by yr,mth 
+) stock_prv,
+from raw_data
+order by name, mth desc, yr)
+
+select *, 
+coalesce(round((stock_qty-stock_prv)*100.0/stock_prv,1),0) diff
+from add_lag;
+```
+
+### **Result:**  
+| Name            | mth | yr   | stock_qty | stock_prv | diff   |
+|-----------------|-----|------|-----------|-----------|--------|
+| BB Ball Bearing | 12  | 2011 | 8475      | 14544     | -41.7  |
+| BB Ball Bearing | 11  | 2011 | 14544     | 19175     | -24.2  |
+| BB Ball Bearing | 10  | 2011 | 19175     | 8845      | 116.8  |
+| BB Ball Bearing | 9   | 2011 | 8845      | 9666      | -8.5   |
+| BB Ball Bearing | 8   | 2011 | 9666      | 12837     | -24.7  |
+| BB Ball Bearing | 7   | 2011 | 12837     | 5259      | 144.1  |
+| BB Ball Bearing | 6   | 2011 | 5259      | null      | 0.0    |
+| Blade           | 12  | 2011 | 1842      | 3598      | -48.8  |
+| Blade           | 11  | 2011 | 3598      | 4670      | -23.0  |
+| ...             | ... | ...  | ...       | ...       | ...    |
+
+### **Key Takeaway:**  
+
+### ❼ **Business Need:**   
+Management needs to understand the relationship between stock and sales to optimize inventory turnover.  
+
+### **Business Question:**  
+Calculate Stock/Sales ratio for each product by month in 2011, order by month desc and ratio desc. Round to 1 decimal.  
+
+### **SQL Query**  
+```sql
+with 
+sale_info as (
+  select 
+      extract(month from a.ModifiedDate) as mth 
+     , extract(year from a.ModifiedDate) as yr 
+     , a.ProductId
+     , b.Name
+     , sum(a.OrderQty) as sales
+  from `adventureworks2019.Sales.SalesOrderDetail` a 
+  left join `adventureworks2019.Production.Product` b 
+    on a.ProductID = b.ProductID
+  where FORMAT_TIMESTAMP("%Y", a.ModifiedDate) = '2011'
+  group by 1,2,3,4
+), 
+
+stock_info as (
+  select
+      extract(month from ModifiedDate) as mth 
+      , extract(year from ModifiedDate) as yr 
+      , ProductId
+      , sum(StockedQty) as stock_cnt
+  from `adventureworks2019.Production.WorkOrder`
+  where FORMAT_TIMESTAMP("%Y", ModifiedDate) = '2011'
+  group by 1,2,3
+)
+
+select
+      a.*
+    , b.stock_cnt as stock  --(*)
+    , round(coalesce(b.stock_cnt,0) / sales,2) as ratio
+from sale_info a 
+full join stock_info b 
+  on a.ProductId = b.ProductId
+and a.mth = b.mth 
+and a.yr = b.yr
+order by 1 desc, 7 desc;
+```
+
+### **Result:**  
+| yr   | ProductID | Name                               | sales | stock | ratio  |
+|------|-----------|------------------------------------|-------|-------|--------|
+| 12   | 2011      | 745 HL Mountain Frame - Black, 48   | 1     | 27    | 27.0   |
+| 12   | 2011      | 743 HL Mountain Frame - Black, 42   | 1     | 26    | 26.0   |
+| 12   | 2011      | 748 HL Mountain Frame - Silver, 38  | 2     | 32    | 16.0   |
+| 12   | 2011      | 722 LL Road Frame - Black, 58       | 4     | 47    | 11.75  |
+| 12   | 2011      | 747 HL Mountain Frame - Black, 38   | 3     | 31    | 10.33  |
+| 12   | 2011      | 726 LL Road Frame - Red, 48         | 5     | 36    | 7.2    |
+| 12   | 2011      | 738 LL Road Frame - Black, 52       | 10    | 64    | 6.4    |
+| 12   | 2011      | 730 LL Road Frame - Red, 62         | 7     | 38    | 5.43   |
+| 12   | 2011      | 741 HL Mountain Frame - Silver, 48  | 5     | 27    | 5.4    |
+| ...  | ...       | ...                                | ...   | ...   | ...    |
+
+
+### **Key Takeaway:**  
+
 
 ### ❽ **Business Need:**  
 Operations team needs to identify bottlenecks in order processing.  
@@ -251,3 +431,5 @@ group by 1,2;
 | 2014 | 1 | 224 | 3873579.012300... |
 
 ### **Key Takeaway:**  
+
+## 4️⃣ Insights & Recommendations
