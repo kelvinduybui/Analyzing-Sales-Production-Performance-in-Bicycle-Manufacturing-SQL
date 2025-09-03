@@ -31,7 +31,7 @@
 - Inventory & Production Planners
 - Business Analysts & Data Teams
 
-🎯 **Objective** 
+🎯 **Objective**  
 This project leverages **SQL** on **Google BigQuery** to empower the sales and inventory management team of a fictional bicycle manufacturing company with data-driven insights. Through SQL queries on BigQuery, we aim to:  
 - Understand performance over time and by category  
 - Evaluate growth, trends, and inventory  
@@ -446,7 +446,7 @@ group by 1,2;
 
 ### **Key Takeaway:**  
 
-## 4️⃣ Insights & Recommendations
+## 4️⃣ Insights & Recommendations  
 After querying things, here are some recommendations for **Sales and Inventory** team:
 - 
 - 
