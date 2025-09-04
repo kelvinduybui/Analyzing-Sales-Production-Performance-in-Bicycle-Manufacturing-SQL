@@ -107,6 +107,7 @@ order by 2,1;
 ### **Key Takeaway:**  
 Bike Racks reign supreme with dominant sales and revenue, while Bib-Shorts remain a steady but minor contributor.  
 
+
 ### ❷ **Business Need:**  
 Management wants to evaluate year-over-year growth to identify the fastest-growing product subcategories.  
 
@@ -163,6 +164,7 @@ order by dk ;
 ### **Key Takeaway**  
 Mountain Frames, Socks, and Road Frames achieve the highest YoY growth in sales quantity, with increases of 5.21, 4.21, and 3.89, respectively, making them the top 3 fastest-growing subcategories.  
 
+
 ### ❸ **Business Need:**  
 The company wants to identify top-performing territories for strategic sales planning.  
 
@@ -214,6 +216,7 @@ order by yr desc, rk asc;
 ### **Key Takeaway:**  
 Across all years (2011–2014), Territory 4 consistently reigns supreme in order volume, followed by Territory 6 and Territory 1, which remain steady at ranks 2 and 3.  
 
+
 ### ❹ **Business Need:**  
 Marketing wants to track seasonal discount costs across subcategories to evaluate promotional impact.  
 
@@ -255,6 +258,7 @@ order by 1, 2;
 
 ### **Key Takeaway:**  
 Helmet discount costs surged from 2012 to 2013, rising more than 3.6x (from ~150 to ~543), showing high promotional efforts.  
+
 
 ### ❺ **Business Need:**  
 The company wants to understand customer loyalty after successful shipments in 2014.  
@@ -321,6 +325,7 @@ order by 1,2;
 ### **Key Takeaway:**  
 Customer acquisition is strongest at Month 0 across all cohorts, while retention drops sharply in subsequent months, with only a small fraction of customers staying active beyond Month 3, indicating challenges in retaining customers.  
 
+
 ### ❻ **Business Need:**  
 Inventory planners need to monitor stock trends and monthly changes to prevent stockouts/overstock.  
 
@@ -371,6 +376,7 @@ from add_lag;
 
 ### **Key Takeaway:**  
 Inventory levels for multiple components show sharp month-to-month fluctuations, with extreme spikes (over 100% growth) followed by steep drops (−40% to −50%), indicating unstable stock management and potential inefficiencies in inventory planning.  
+
 
 ### ❼ **Business Need:**   
 Management needs to understand the relationship between stock and sales to optimize inventory turnover.  
@@ -436,6 +442,7 @@ order by 1 desc, 7 desc;
 ### **Key Takeaway:**  
 Sales-to-stock ratios vary widely: some products (e.g., HL Mountain Frames) show extremely high ratios (20–27), indicating stockout risk, while many others maintain balanced ratios near 1.0. However, several apparel and accessory items lack stock data (ratio = 0), suggesting missing inventory records or poor stock visibility.  
 
+
 ### ❽ **Business Need:**  
 Operations team needs to identify bottlenecks in order processing.  
 
@@ -461,6 +468,7 @@ group by 1,2;
 
 ### **Key Takeaway:**  
 The presence of 224 pending orders (≈$3.87M) in 2014 signals potential challenges in order fulfillment.  
+
 
 ## 4️⃣ Insights & Recommendations  
 ### Insights
