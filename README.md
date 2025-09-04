@@ -464,9 +464,15 @@ The presence of 224 pending orders (≈$3.87M) in 2014 signals potential challen
 
 ## 4️⃣ Insights & Recommendations  
 ### Insights
-- fff
-- mmm
+- **Sales & Growth:** Some SubCategories show strong YoY growth (Frames, Socks, Helmets…), proving high demand but uneven performance across groups.  
+- **Territory Performance:** A few markets (TerritoryID 4, 6, 1) consistently dominate → revenue is concentrated in limited regions.  
+- **Customer Behavior:** Acquisition is strong at Month 0, but retention drops sharply after 3 months → clear customer retention issue.  
+- **Inventory & Stock:** Inventory fluctuates heavily (±100% MoM), with many products showing sharp stock drops or spikes → lack of stability; Stock-to-sales ratio is extremely high for many products (20–30x), meaning excess inventory with slow sales.  
+- **Operations & Fulfillment:** In 2014, 224 pending orders worth nearly $3.9M → fulfillment bottlenecks and cash flow impact.
 
 ### Recommendations
-- xx
-- xxx 
+- **Sales & Marketing:** Allocate marketing/promotion budget toward high-growth SubCategories. For low-growth ones, consider reducing SKUs and focusing on up-selling.  
+- **Territory Strategy:** Maintain strength in the top 3 Territories. Explore opportunities to expand market share in weaker regions.  
+- **Customer Retention:** Launch loyalty programs and personalized offers to boost retention after Month 1–3. Use follow-up campaigns for at-risk customer groups.
+- **Inventory Management:** Apply better demand forecasting, safety stock optimization to avoid extreme fluctuations. For SKUs with excessively high stock-to-sales ratios → consider markdowns, bundle sales, or phasing out.
+- **Fulfillment Optimization**: Review supply chain processes to reduce pending orders.  
