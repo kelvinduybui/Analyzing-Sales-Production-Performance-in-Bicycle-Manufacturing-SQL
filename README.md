@@ -63,7 +63,7 @@ This project leverages **SQL** on **Google BigQuery** to empower the sales and i
 
 ---
 ## ⚒️ Primary Process  
-## ❶
+## ❶ Problem 1
 ### **Business Need:**  
 The sales team needs to understand product performance over the last 12 months to identify top-performing subcategories for better resource allocation.  
 
