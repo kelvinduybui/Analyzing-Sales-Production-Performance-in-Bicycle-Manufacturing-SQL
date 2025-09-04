@@ -1,4 +1,4 @@
-# Analyzing Sales & Production Performance in Bicycle Manufacturing using SQL  
+# Analyzing Sales & Production Performance in Bicycle Manufacturing | SQL  
 
 **Author:** Bùi Xuân Bảo Duy (Kelvin)  
 
@@ -76,11 +76,11 @@ select format_datetime('%b %Y', a.ModifiedDate) month
       ,sum(a.OrderQty) qty_item
       ,sum(a.LineTotal) total_sales
       ,count(distinct a.SalesOrderID) order_cnt
-FROM `adventureworks2019.Sales.SalesOrderDetail` a 
+from `adventureworks2019.Sales.SalesOrderDetail` a 
 left join `adventureworks2019.Production.Product` b
   on a.ProductID = b.ProductID
 left join `adventureworks2019.Production.ProductSubcategory` c
-  on b.ProductSubcategoryID = cast(c.ProductSubcategoryID as string)
+  on cast (b.ProductSubcategoryID as int) = c.ProductSubcategoryID
 
 where date(a.ModifiedDate) >=  (select date_sub(date(max(a.ModifiedDate)), INTERVAL 12 month)
 from `adventureworks2019.Sales.SalesOrderDetail` )
@@ -105,6 +105,7 @@ order by 2,1;
 
 
 ### **Key Takeaway:**  
+Bike Racks reign supreme with dominant sales and revenue, while Bib-Shorts remain a steady but minor contributor.  
 
 ### ❷ **Business Need:**  
 Management wants to evaluate year-over-year growth to identify the fastest-growing product subcategories.  
@@ -116,17 +117,17 @@ Calculate the **YoY growth rate** for each **SubCategory** and list the **top 3*
 ```sql
 with 
 sale_info as (
-  SELECT 
+  select 
       FORMAT_TIMESTAMP("%Y", a.ModifiedDate) as yr
       , c.Name
       , sum(a.OrderQty) as qty_item
 
-  FROM `adventureworks2019.Sales.SalesOrderDetail` a 
-  LEFT JOIN `adventureworks2019.Production.Product` b on a.ProductID = b.ProductID
-  LEFT JOIN `adventureworks2019.Production.ProductSubcategory` c on cast(b.ProductSubcategoryID as int) = c.ProductSubcategoryID
+  from `adventureworks2019.Sales.SalesOrderDetail` a 
+  left join `adventureworks2019.Production.Product` b on a.ProductID = b.ProductID
+  left join `adventureworks2019.Production.ProductSubcategory` c on cast(b.ProductSubcategoryID as int) = c.ProductSubcategoryID
 
-  GROUP BY 1,2
-  ORDER BY 2 asc , 1 desc
+  group by 1,2
+  order by 2 asc , 1 desc
 ),
 
 sale_diff as (
@@ -152,6 +153,16 @@ where dk <=3
 order by dk ;
 ```
 
+### **Result:**
+| Name            | qty_item | prv_qty | qty_diff |
+| --------------- | -------- | ------- | -------- |
+| Mountain Frames | 3168     | 510     | 5.21     |
+| Socks           | 2724     | 523     | 4.21     |
+| Road Frames     | 5564     | 1137    | 3.89     |
+
+### **Key Takeaway**  
+Mountain Frames, Socks, and Road Frames achieve the highest YoY growth in sales quantity, with increases of 5.21, 4.21, and 3.89, respectively, making them the top 3 fastest-growing subcategories.  
+
 ### ❸ **Business Need:**  
 The company wants to identify top-performing territories for strategic sales planning.  
 
@@ -164,7 +175,7 @@ with raw_data as
 (select extract (year from a.ModifiedDate) yr,
 TerritoryID, 
 sum(OrderQty) order_cnt
-FROM `adventureworks2019.Sales.SalesOrderDetail` a
+from `adventureworks2019.Sales.SalesOrderDetail` a
 left join `adventureworks2019.Sales.SalesOrderHeader` b
 using(SalesOrderID)
 group by yr, TerritoryID)
@@ -201,6 +212,7 @@ order by yr desc, rk asc;
 | 2011 | 1           | 1964      | 3  |
 
 ### **Key Takeaway:**  
+Across all years (2011–2014), Territory 4 consistently reigns supreme in order volume, followed by Territory 6 and Territory 1, which remain steady at ranks 2 and 3.  
 
 ### ❹ **Business Need:**  
 Marketing wants to track seasonal discount costs across subcategories to evaluate promotional impact.  
@@ -210,29 +222,29 @@ Calculate total seasonal discount cost for each subcategory.
 
 ### **SQL Query**  
 ```sql
-WITH sales_data AS (
-    SELECT DISTINCT
+with sales_data AS (
+    select distinct
         a.ModifiedDate,
         c.Name,
         d.DiscountPct,
         d.Type,
         a.OrderQty * d.DiscountPct * a.UnitPrice AS disc_cost
-    FROM `adventureworks2019.Sales.SalesOrderDetail` a
-    LEFT JOIN `adventureworks2019.Production.Product` b
-        ON a.ProductID = b.ProductID
-    LEFT JOIN `adventureworks2019.Production.ProductSubcategory` c
-        ON CAST(b.ProductSubcategoryID AS INT64) = c.ProductSubcategoryID
-    LEFT JOIN `adventureworks2019.Sales.SpecialOffer` d
-        ON a.SpecialOfferID = d.SpecialOfferID
-    WHERE LOWER(d.Type) LIKE '%seasonal discount%'
+    from `adventureworks2019.Sales.SalesOrderDetail` a
+    left join `adventureworks2019.Production.Product` b
+        on a.ProductID = b.ProductID
+    left join `adventureworks2019.Production.ProductSubcategory` c
+        on cast(b.ProductSubcategoryID AS INT64) = c.ProductSubcategoryID
+    left join `adventureworks2019.Sales.SpecialOffer` d
+        on a.SpecialOfferID = d.SpecialOfferID
+    where lower(d.Type) LIKE '%seasonal discount%'
 )
-SELECT 
-    EXTRACT(YEAR FROM ModifiedDate) AS year,
+select 
+    extract(year from ModifiedDate) AS year,
     Name,
     SUM(disc_cost) AS total_cost
-FROM sales_data
-GROUP BY 1, 2
-ORDER BY 1, 2;
+from sales_data
+group by 1, 2
+order by 1, 2;
 ```
 
 ### **Results:** 
@@ -242,6 +254,7 @@ ORDER BY 1, 2;
 | 2013 | Helmets | 543.21975 |
 
 ### **Key Takeaway:**  
+Helmet discount costs surged from 2012 to 2013, rising more than 3.6x (from ~150 to ~543), showing high promotional efforts.  
 
 ### ❺ **Business Need:**  
 The company wants to understand customer loyalty after successful shipments in 2014.  
@@ -306,6 +319,7 @@ order by 1,2;
 | ...        | ...         | ...          |
 
 ### **Key Takeaway:**  
+Customer acquisition is strongest at Month 0 across all cohorts, while retention drops sharply in subsequent months, with only a small fraction of customers staying active beyond Month 3, indicating challenges in retaining customers.  
 
 ### ❻ **Business Need:**  
 Inventory planners need to monitor stock trends and monthly changes to prevent stockouts/overstock.  
@@ -356,6 +370,7 @@ from add_lag;
 | ...             | ... | ...  | ...       | ...       | ...    |
 
 ### **Key Takeaway:**  
+Inventory levels for multiple components show sharp month-to-month fluctuations, with extreme spikes (over 100% growth) followed by steep drops (−40% to −50%), indicating unstable stock management and potential inefficiencies in inventory planning.  
 
 ### ❼ **Business Need:**   
 Management needs to understand the relationship between stock and sales to optimize inventory turnover.  
@@ -393,7 +408,7 @@ stock_info as (
 
 select
       a.*
-    , b.stock_cnt as stock  --(*)
+    , b.stock_cnt as stock
     , round(coalesce(b.stock_cnt,0) / sales,2) as ratio
 from sale_info a 
 full join stock_info b 
@@ -419,7 +434,7 @@ order by 1 desc, 7 desc;
 
 
 ### **Key Takeaway:**  
-
+Sales-to-stock ratios vary widely: some products (e.g., HL Mountain Frames) show extremely high ratios (20–27), indicating stockout risk, while many others maintain balanced ratios near 1.0. However, several apparel and accessory items lack stock data (ratio = 0), suggesting missing inventory records or poor stock visibility.  
 
 ### ❽ **Business Need:**  
 Operations team needs to identify bottlenecks in order processing.  
@@ -429,11 +444,11 @@ Calculate the number and value of orders with status = 'Pending' in 2014.
 
 ### **SQL Query**  
 ```sql
-SELECT extract (year from OrderDate) yr,
+select extract (year from OrderDate) yr,
 status,
 count(distinct PurchaseOrderID) order_Cnt,
 sum(TotalDue) value
-FROM `adventureworks2019.Purchasing.PurchaseOrderHeader`
+from `adventureworks2019.Purchasing.PurchaseOrderHeader`
 where status =1
 and extract (year from OrderDate) = 2014
 group by 1,2;
@@ -445,6 +460,7 @@ group by 1,2;
 | 2014 | 1 | 224 | 3873579.012300... |
 
 ### **Key Takeaway:**  
+The presence of 224 pending orders (≈$3.87M) in 2014 signals potential challenges in order fulfillment.  
 
 ## 4️⃣ Insights & Recommendations  
 ### Insights
