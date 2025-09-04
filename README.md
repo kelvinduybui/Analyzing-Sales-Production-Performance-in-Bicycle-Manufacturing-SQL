@@ -16,7 +16,7 @@
 4️⃣ [Insights & Recommendations](#insights--recommendations)  
 
 ---
-## 📘 Context
+## 1️⃣ Context
 
 📘 **Main Context**  
 - **Company Industry:** Bicycle manufacturing  
@@ -43,7 +43,7 @@ This project leverages **SQL** on **Google BigQuery** to empower the sales and i
 
 ---
 
-##  Dataset Description & Data Structure (DD & DS)
+## 2️⃣ Dataset Description & Data Structure (DD & DS)
 
 ### 📊 Data Description  
 - **Dataset:** Simulated bicycle sales & operations data (AdventureWorks2019-style)  
@@ -62,7 +62,7 @@ This project leverages **SQL** on **Google BigQuery** to empower the sales and i
 - `Production.ProductInventory`
 
 ---
-## ⚒️ Primary Process  
+## 3️⃣ Primary Process  
 ### ❶ **Business Need:**  
 The sales team needs to understand product performance over the last 12 months to identify top-performing subcategories for better resource allocation.  
 
