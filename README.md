@@ -10,10 +10,10 @@
 
 ## 🗂️ Table of Contents
 
-1️ [Context]  
-2️⃣ [Dataset Description & Data Structure (DD & DS)]  
-3️⃣ [Primary Process]  
-4️⃣ [Insights & Recommendations]  
+1️⃣ [Context](#context)
+2️⃣ [Dataset Description & Data Structure (DD--ds)](#dataset-description--data-structure-dd--ds)
+3️⃣ [Primary Process](#primary-process)
+4️⃣ [Insights & Recommendations](#insights--recommendations)  
 
 ---
 ## 📘 Context
