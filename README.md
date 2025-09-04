@@ -63,14 +63,13 @@ This project leverages **SQL** on **Google BigQuery** to empower the sales and i
 
 ---
 ## ⚒️ Primary Process  
-### ❶
-#### **Business Need:**  
+### ❶ **Business Need:**  
 The sales team needs to understand product performance over the last 12 months to identify top-performing subcategories for better resource allocation.  
 
-#### **Business Question:**  
+### **Business Question:**  
 Calculate the total **Quantity of items**, **Sales value**, and **Order quantity** for each Subcategory in the last 12 months (L12M).  
 
-#### **SQL Query**  
+### **SQL Query**  
 ```sql
 select format_datetime('%b %Y', a.ModifiedDate) month
       ,c.Name
@@ -89,7 +88,7 @@ group by 1,2
 order by 2,1;
 ```
 
-#### **Result:**  
+### **Result:**  
 | month | Name       | qty_item | total_sales         | order_cnt |
 |-------|------------|---------:|--------------------:|----------:|
 | Apr 2013 | Bib-Shorts | 280      | 14833.123692        | 34        |
@@ -105,7 +104,7 @@ order by 2,1;
 | ...      | ...        | ...      | ...                 | ...       |
 
 
-#### **Key Takeaway:**  
+### **Key Takeaway:**  
 Bike Racks reign supreme with dominant sales and revenue, while Bib-Shorts remain a steady but minor contributor.  
 
 
